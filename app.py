@@ -114,6 +114,15 @@ def request_json_optional(url: str) -> dict[str, Any]:
         return {}
 
 
+def resolve_url_optional(url: str) -> str:
+    request = Request(url, headers={"User-Agent": "gamehelper/1.0"})
+    try:
+        with urlopen(request, timeout=8) as response:
+            return response.geturl()
+    except (HTTPError, URLError):
+        return ""
+
+
 def request_text(url: str) -> str:
     request = Request(url, headers={"User-Agent": "gamehelper/1.0"})
     try:
@@ -159,10 +168,10 @@ def load_update_info() -> dict[str, Any]:
         "releaseUrl": "",
         "installerUrl": "",
     }
-    if not GITHUB_RELEASE_API:
+    if not GITHUB_REPO:
         return payload
 
-    release = request_json_optional(GITHUB_RELEASE_API)
+    release = request_json_optional(GITHUB_RELEASE_API) if GITHUB_RELEASE_API else {}
     latest_tag = str(release.get("tag_name") or release.get("name") or APP_VERSION).strip()
     release_url = str(release.get("html_url") or "")
     installer_url = ""
@@ -174,6 +183,18 @@ def load_update_info() -> dict[str, Any]:
         if browser_download_url and INSTALLER_ASSET_RE.search(name):
             installer_url = browser_download_url
             break
+
+    if not release_url:
+        latest_url = f"https://github.com/{GITHUB_REPO}/releases/latest"
+        resolved_url = resolve_url_optional(latest_url)
+        if resolved_url:
+            release_url = resolved_url
+            tag_match = re.search(r"/releases/tag/([^/?#]+)", resolved_url)
+            if tag_match:
+                latest_tag = unquote(tag_match.group(1))
+
+    if not installer_url:
+        installer_url = f"https://github.com/{GITHUB_REPO}/releases/latest/download/GameHelperSteamSetup.exe"
 
     payload.update(
         {
