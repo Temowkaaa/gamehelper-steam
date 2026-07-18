@@ -821,14 +821,17 @@ def run_sam_helper(args: list[str]) -> dict[str, Any]:
         raise ApiError("Встроенный SAM helper не найден. Пересобери приложение.", 500)
     env = dict(os.environ)
     env["GAMEHELPER_STEAM_PATH"] = str(find_steam_path())
+    creationflags = subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
     process = subprocess.run(
         [helper, *args],
         cwd=str(Path(helper).parent),
         capture_output=True,
         text=True,
         encoding="utf-8",
+        errors="replace",
         env=env,
         timeout=25,
+        creationflags=creationflags,
     )
     output = (process.stdout or "").strip()
     try:
@@ -1068,7 +1071,8 @@ def launch_sam(app_id: int | None = None) -> dict[str, Any]:
     command = [executable]
     if app_id and Path(executable).name.lower() == "sam.game.exe":
         command.append(str(app_id))
-    subprocess.Popen(command, cwd=str(Path(executable).parent), close_fds=True)
+    creationflags = subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
+    subprocess.Popen(command, cwd=str(Path(executable).parent), close_fds=True, creationflags=creationflags)
     return {"ok": True, "launched": executable}
 
 
