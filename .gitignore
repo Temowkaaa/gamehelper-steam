@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+data/
+build/
+dist/
+tmp_frames/
+*.spec
+*.log
+
+SamHelper/bin/
+SamHelper/obj/
+vendor/**/bin/
+vendor/**/obj/

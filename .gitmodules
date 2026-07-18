@@ -1,0 +1,3 @@
+[submodule "vendor/SteamAchievementManager"]
+	path = vendor/SteamAchievementManager
+	url = https://github.com/gibbed/SteamAchievementManager.git

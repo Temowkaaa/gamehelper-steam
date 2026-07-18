@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GameHelper Steam</title>
+    <link rel="icon" href="/sh.ico" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <section id="startup-loader" class="startup-loader" aria-live="polite">
+      <div class="startup-card">
+        <img src="/sh.ico" alt="" />
+        <strong>GameHelper</strong>
+        <span id="startup-message" data-i18n="startup.prepare">Читаю Steam и подготавливаю библиотеку...</span>
+        <div class="startup-bar" aria-hidden="true"></div>
+      </div>
+    </section>
+    <main class="shell">
+      <section class="workspace" aria-labelledby="page-title">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Steam account analyzer</p>
+            <h1 id="page-title">
+              <img src="/sh.ico" alt="" />
+              <span>GameHelper</span>
+              <button id="scan-button" class="scan-button" type="button" aria-label="Сканировать локально" title="Сканировать локально" data-i18n-title="action.scan">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
+                  <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
+                </svg>
+              </button>
+            </h1>
+          </div>
+          <div class="topbar-actions">
+            <button id="settings-button" class="settings-button" type="button" aria-label="Настройки" title="Настройки">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065" />
+                <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+              </svg>
+            </button>
+            <section id="account-card" class="account-card" hidden>
+              <img id="account-avatar" alt="" />
+              <strong id="account-name">Steam</strong>
+            </section>
+          </div>
+        </header>
+
+        <section id="status" class="status" aria-live="polite"></section>
+
+        <nav class="tabs" aria-label="Разделы" data-i18n-aria="tabs.label">
+          <button class="tab is-active" type="button" data-tab="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></svg><span data-i18n="tab.home">Главная</span></button>
+          <button class="tab" type="button" data-tab="games"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg><span data-i18n="tab.games">Список игр</span></button>
+          <button class="tab" type="button" data-tab="unfinished"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v5l3 2"/><path d="M4 13a8 8 0 1 0 2.3-5.7"/><path d="M4 4v4h4"/></svg><span data-i18n="tab.unfinished">Не пройденные</span></button>
+          <button class="tab" type="button" data-tab="favorites"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z"/></svg><span data-i18n="tab.favorites">Избранное</span></button>
+          <button class="tab" type="button" data-tab="want"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v17l-6-4-6 4V4Z"/></svg><span data-i18n="tab.want">Хочу поиграть</span></button>
+          <button class="tab" type="button" data-tab="rating"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0V4Z"/><path d="M5 5H3v3a4 4 0 0 0 4 4"/><path d="M19 5h2v3a4 4 0 0 1-4 4"/></svg><span data-i18n="tab.rating">Рейтинг</span></button>
+          <button class="tab" type="button" data-tab="sam"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.5 5.5 21l1.2-7.3L1.5 8.5l7.3-1L12 1l3.2 6.5 7.3 1-5.2 5.2 1.2 7.3L12 17.5Z"/></svg><span data-i18n="tab.achievements">Достижения</span></button>
+        </nav>
+
+        <section id="home-view" class="view is-active" data-view="home">
+          <section id="home-insights" class="insights" hidden></section>
+          <section id="home-showcase" class="home-showcase" hidden>
+            <article id="hero-game" class="hero-game"></article>
+            <div id="spotlight-games" class="spotlight-games"></div>
+          </section>
+          <section id="home-details" class="home-details" hidden></section>
+        </section>
+
+        <section id="results" class="view results" data-view="games" hidden>
+          <section id="summary" class="summary" hidden>
+            <div>
+              <span data-i18n="summary.totalHours">Всего часов</span>
+              <strong id="total-hours">0</strong>
+            </div>
+            <div>
+              <span data-i18n="summary.playedGames">Сыгранные игры</span>
+              <strong id="game-count">0</strong>
+            </div>
+            <div>
+              <span data-i18n="summary.withLaunchDate">С датой запуска</span>
+              <strong id="played-count">0</strong>
+            </div>
+          </section>
+          <div class="result-toolbar">
+            <label>
+              <span data-i18n="filter.search">Поиск</span>
+              <input id="search" type="search" placeholder="Название игры" data-i18n-placeholder="placeholder.gameName" />
+            </label>
+            <label>
+              <span data-i18n="filter.minHours">Минимум часов</span>
+              <input id="min-hours" type="number" min="0" step="1" value="0" />
+            </label>
+            <label>
+              <span data-i18n="filter.sort">Сортировка</span>
+              <select id="sort-order">
+                <option value="hours-desc" data-i18n="sort.hoursDesc">Часы: больше сначала</option>
+                <option value="hours-asc" data-i18n="sort.hoursAsc">Часы: меньше сначала</option>
+                <option value="last-desc" data-i18n="sort.lastLaunch">Последний запуск</option>
+                <option value="name-asc" data-i18n="sort.nameAsc">Название А-Я</option>
+              </select>
+            </label>
+          </div>
+          <div id="games" class="games"></div>
+        </section>
+
+        <section class="view saved-view" data-view="unfinished" hidden>
+          <header class="section-header">
+            <div>
+              <h2 data-i18n="unfinished.title">Не пройденные</h2>
+              <p data-i18n="unfinished.subtitle">Игры без времени: не запускались или Steam показывает 0 часов.</p>
+            </div>
+          </header>
+          <div id="unfinished-games" class="games"></div>
+        </section>
+
+        <section class="view saved-view" data-view="sam" hidden>
+          <header class="section-header">
+            <div>
+              <h2 data-i18n="achievements.title">Достижения Steam</h2>
+              <p data-i18n="achievements.subtitle">Выбери игру в библиотеке, чтобы посмотреть достижения.</p>
+            </div>
+          </header>
+          <section class="sam-layout">
+            <aside class="sam-game-browser">
+              <label>
+                <span data-i18n="common.library">Библиотека</span>
+                <input id="sam-game-search" type="search" placeholder="Найти игру" data-i18n-placeholder="placeholder.findGame" />
+              </label>
+              <div id="sam-games" class="sam-games"></div>
+            </aside>
+            <section class="sam-detail">
+              <section id="sam-selected-game" class="sam-selected-game" hidden></section>
+              <section id="sam-summary" class="sam-summary" hidden></section>
+              <div id="sam-achievements" class="achievements"></div>
+            </section>
+          </section>
+        </section>
+
+        <section class="view saved-view" data-view="favorites" hidden>
+          <header class="section-header">
+            <h2 data-i18n="favorites.title">Избранное</h2>
+          </header>
+          <div id="favorite-games" class="games"></div>
+        </section>
+
+        <section class="view saved-view" data-view="want" hidden>
+          <header class="section-header">
+            <h2 data-i18n="want.title">Хочу поиграть</h2>
+          </header>
+          <div id="want-games" class="games"></div>
+        </section>
+
+        <section class="view saved-view" data-view="rating" hidden>
+          <header class="section-header">
+            <div>
+              <h2 data-i18n="rating.title">Рейтинг игр</h2>
+              <p data-i18n="rating.subtitle">Нажимай плюс в нужном тире и выбирай игру из библиотеки.</p>
+            </div>
+          </header>
+          <section id="tier-list" class="tier-list"></section>
+        </section>
+
+        <section class="view settings-view" data-view="settings" hidden>
+          <header class="section-header">
+            <div>
+              <h2 data-i18n="settings.title">Настройки</h2>
+              <p data-i18n="settings.subtitle">Параметры интерфейса, аккаунта Steam и информация о приложении.</p>
+            </div>
+          </header>
+
+          <section class="settings-grid">
+            <article class="settings-panel">
+              <h3 data-i18n="settings.interface">Интерфейс</h3>
+              <label class="settings-field">
+                <span data-i18n="settings.language">Язык</span>
+                <select id="language-select">
+                  <option value="ru">Русский</option>
+                  <option value="en">English</option>
+                </select>
+              </label>
+              <label class="settings-field">
+                <span data-i18n="settings.background">Фон</span>
+                <select id="background-select">
+                  <option value="art" data-i18n="settings.backgroundOn">Фон включён</option>
+                  <option value="none" data-i18n="settings.backgroundOff">Без фона</option>
+                </select>
+              </label>
+            </article>
+
+            <article class="settings-panel">
+              <h3>Steam</h3>
+              <label class="settings-field">
+                <span data-i18n="settings.user">Пользователь</span>
+                <select id="account-select"></select>
+              </label>
+              <p id="account-select-note" class="settings-note"></p>
+            </article>
+
+            <article class="settings-panel app-info-panel">
+              <h3 data-i18n="settings.about">О приложении</h3>
+              <dl class="app-info">
+                <div>
+                  <dt data-i18n="settings.appName">Название</dt>
+                  <dd>GameHelper Steam</dd>
+                </div>
+                <div>
+                  <dt data-i18n="settings.version">Версия</dt>
+                  <dd id="settings-app-version">-</dd>
+                </div>
+                <div>
+                  <dt data-i18n="settings.mode">Режим</dt>
+                  <dd data-i18n="settings.modeValue">Локальный анализ Steam без API-ключа</dd>
+                </div>
+                <div>
+                  <dt>Steam</dt>
+                  <dd id="settings-steam-path">-</dd>
+                </div>
+                <div>
+                  <dt data-i18n="settings.games">Игры</dt>
+                  <dd id="settings-game-count">-</dd>
+                </div>
+                <div>
+                  <dt data-i18n="settings.data">Данные</dt>
+                  <dd data-i18n="settings.dataValue">Названия и изображения кешируются локально</dd>
+                </div>
+              </dl>
+              <div class="update-box">
+                <div>
+                  <strong data-i18n="update.title">Обновления</strong>
+                  <span id="update-status">Проверка ещё не запускалась</span>
+                </div>
+                <div class="update-actions">
+                  <button id="check-update-button" type="button" data-i18n="update.check">Проверить</button>
+                  <button id="open-update-button" type="button" data-i18n="update.open" hidden>Открыть</button>
+                </div>
+              </div>
+            </article>
+          </section>
+        </section>
+      </section>
+    </main>
+    <section id="tier-modal" class="modal" hidden>
+      <div class="modal-backdrop" data-close-tier-modal></div>
+      <article class="tier-modal-card">
+        <header>
+          <div>
+            <span id="tier-modal-kicker">Рейтинг</span>
+            <h2 id="tier-modal-title">Добавить игру</h2>
+          </div>
+          <button type="button" class="modal-close" data-close-tier-modal aria-label="Закрыть" data-i18n-aria="action.close">×</button>
+        </header>
+        <label class="tier-modal-search">
+          <span data-i18n="filter.search">Поиск</span>
+          <input id="tier-game-search" type="search" placeholder="Название игры" data-i18n-placeholder="placeholder.gameName" />
+        </label>
+        <div id="tier-game-list" class="tier-game-list"></div>
+      </article>
+    </section>
+    <script src="/script.js"></script>
+  </body>
+</html>
