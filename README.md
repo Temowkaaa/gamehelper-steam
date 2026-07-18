@@ -1,60 +1,59 @@
 # GameHelper Steam
 
-ПК-приложение для локального анализа Steam-библиотеки: показывает общее время, количество игр и список игр с часами.
+GameHelper Steam - desktop-приложение для Windows, которое локально анализирует Steam-аккаунт и показывает библиотеку игр, часы, избранное, список "хочу поиграть", рейтинг и достижения.
 
-Основной режим работает без API key и без входа в Steam через приложение. GameHelper читает локальные файлы установленного Steam:
+Приложение работает без Steam Web API key и без авторизации внутри GameHelper. Оно читает локальные данные установленного Steam на ПК пользователя.
 
-- `steamapps/appmanifest_*.acf` — установленные игры и их названия;
-- `userdata/*/config/localconfig.vdf` — локально сохраненное время игры.
+## Установка
 
-## Запуск
+Скачай последнюю версию установщика:
 
-Обычный запуск красивого desktop-интерфейса:
+[GameHelperSteamSetup.exe](https://github.com/Temowkaaa/gamehelper-steam/releases/latest/download/GameHelperSteamSetup.exe)
 
-```powershell
-.\run_gamehelper.bat
-```
+После установки приложение запускается как обычная Windows-программа.
 
-Или напрямую:
+## Возможности
+
+- локальный поиск активного Steam-аккаунта;
+- список игр с часами и последним запуском;
+- фильтры и сортировка по времени;
+- отдельный список игр без времени;
+- избранное и "хочу поиграть";
+- тир-лист/рейтинг игр;
+- просмотр достижений Steam;
+- локальный кэш названий и изображений игр;
+- проверка обновлений через GitHub Releases.
+
+## Обновления
+
+В приложении есть проверка обновлений в настройках. Новые версии публикуются в GitHub Releases:
+
+[Releases](https://github.com/Temowkaaa/gamehelper-steam/releases)
+
+Если доступна новая версия, GameHelper откроет страницу или установщик обновления.
+
+## Для разработки
+
+Основной desktop-запуск:
 
 ```powershell
 python desktop_web_app.py
 ```
 
-Кнопка `Сканировать` делает только локальный поиск. Кнопка `Обновить названия` может обратиться к публичной странице Steam Store без API key, чтобы дозаполнить названия для старых или удаленных игр, где локальный Steam хранит только AppID.
-
-## Дополнительно
-
-Сборка `.exe`:
+Сборка `exe` и установщика:
 
 ```powershell
-python -m PyInstaller --noconsole --onefile --name GameHelperSteam --icon sh.ico --add-data "public;public" --add-data "sh.ico;." --add-data "back.png;." --add-data "app_config.json;." --add-data "SamHelper\bin\x86\Release;SamHelper" desktop_web_app.py
+powershell -ExecutionPolicy Bypass -File .\build_release.ps1
 ```
 
-Готовый файл появится здесь: `dist\GameHelperSteam.exe`.
+Готовые файлы появляются в папке `dist`:
 
-Сборка установщика:
+- `GameHelperSteam.exe`
+- `GameHelperSteamSetup.exe`
 
-```powershell
-& "$env:LOCALAPPDATA\Programs\Inno Setup 6\ISCC.exe" installer\GameHelperSteam.iss
-```
+Перед новым релизом нужно обновить версию в:
 
-Готовый установщик появится здесь: `dist\GameHelperSteamSetup.exe`.
+- `app_config.json`
+- `installer/GameHelperSteam.iss`
 
-## GitHub Releases и обновления
-
-Приложение умеет проверять новую версию через GitHub Releases. Для подключения:
-
-1. Создай репозиторий на GitHub и залей исходники.
-2. В `app_config.json` укажи репозиторий в формате `owner/repo`.
-3. Перед релизом обнови `version` в `app_config.json` и `MyAppVersion` в `installer/GameHelperSteam.iss`.
-4. Собери `GameHelperSteam.exe` и `GameHelperSteamSetup.exe`.
-5. Создай GitHub Release с тегом `vX.Y.Z` и прикрепи файл `GameHelperSteamSetup.exe`.
-
-После этого кнопка проверки обновлений в настройках будет сравнивать текущую версию с последним GitHub Release и открывать страницу установки новой версии.
-
-Серверный запуск для тестов:
-
-```powershell
-python app.py
-```
+Затем собрать проект, создать новый GitHub Release с тегом вида `v1.0.1` и прикрепить `GameHelperSteamSetup.exe`.
